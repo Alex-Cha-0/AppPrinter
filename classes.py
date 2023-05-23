@@ -23,11 +23,9 @@ class Printer:
         try:
             for i in range(len(data)):
                 column_name = data[i][0]
-                _data = (data[i][1])
+                _data = data[i][1]
                 cell = data[i][2]
-                print(column_name, _data, cell)
                 sql_update_query = f"""UPDATE printers set {column_name} = '{_data}' where id = {cell}"""
-                print(sql_update_query)
                 self.cursor.execute(sql_update_query)
                 self.connection.commit()
             self.connection.close()
