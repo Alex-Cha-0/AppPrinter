@@ -1,7 +1,8 @@
 import sys
 
+from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtGui import QFont
-from PyQt6.QtWidgets import QTableWidgetItem, QDialog
+from PyQt6.QtWidgets import QTableWidgetItem, QDialog, QMainWindow
 from PyQt6.QtWidgets import QMessageBox
 
 import main_window
@@ -14,17 +15,21 @@ LIST_OF_CELL_CHANGES = []
 
 
 class DialogDesign(QDialog, dialog_window.Ui_Dialog):
+
     def __init__(self):
         super().__init__()
         self.setupUi(self)
         self.pushButton_send.clicked.connect(self.send_data)
 
     def send_data(self):
-        p_add = Printer('printers.db')
-        p_add.add_printer(self.lineEdit_model.text(), self.lineEdit_cartridge.text(),
-                          self.lineEdit_drum.text(), self.lineEdit_ip.text(), self.lineEdit_mac.text(),
-                          self.lineEdit_place.text())
-        self.close()
+        try:
+            p_add = Printer('printers.db')
+            p_add.add_printer(self.lineEdit_model.text(), self.lineEdit_cartridge.text(),
+                              self.lineEdit_drum.text(), self.lineEdit_ip.text(), self.lineEdit_mac.text(),
+                              self.lineEdit_place.text(), self.lineEdit_place_building.text())
+            self.close()
+        except Exception as s:
+            pass
 
 
 class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
@@ -41,7 +46,13 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
 
     def dialog_window(self):
         dlg = DialogDesign()
+        dlg.finished.connect(self.reload)
         dlg.exec()
+
+    def reload(self):
+        # здесь вы можете выполнить любой код, который обновляет главное окно
+        print('Главное окно обновлено')
+        self.import_data_to_table()
 
     def cell_was_clicked(self):
         # Функция - получить ID
@@ -56,14 +67,25 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         return self.tableWidget.currentRow(), self.tableWidget.currentColumn()
 
     def import_data_to_table(self):
-        s = Printer('printers.db')
-        result = s.show_printers()
+        try:
+            s = Printer('printers.db')
+            result = s.show_printers()
 
-        for row_number, row_data in enumerate(result):
-            self.tableWidget.insertRow(row_number)
+            self.tableWidget.setRowCount(0)
+            # for row_number, row_data in enumerate(result):
+            #     self.tableWidget.insertRow(row_number)
+            #
+            #     for column_number, data in enumerate(row_data):
+            #         self.tableWidget.setItem(row_number, column_number, QTableWidgetItem(str(data)))
 
-            for column_number, data in enumerate(row_data):
-                self.tableWidget.setItem(row_number, column_number, QTableWidgetItem(str(data)))
+            self.tableWidget.setRowCount(0)
+            for row, form in enumerate(result):
+                self.tableWidget.insertRow(row)
+                for column, item in enumerate(form):
+                    self.tableWidget.setItem(row, column, QTableWidgetItem(str(item)))
+
+        except Exception as s:
+            pass
 
     def get_data_from_cell_to_change(self):
         try:
@@ -80,11 +102,10 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
             self.tableWidget.item(current_row, current_column).setFont(font)
             LIST_OF_CELL_CHANGES.append((column_name, cell_value, cell_id))
 
-            # print(DICT_OF_CELL_CHANGES)
-            # print(len(DICT_OF_CELL_CHANGES))
+
 
         except Exception as s:
-            print(s)
+            pass
 
     def send_cell_data_to_change(self):
         try:

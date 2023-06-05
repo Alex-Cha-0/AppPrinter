@@ -27,12 +27,13 @@ class Printer:
                 cell = data[i][2]
                 sql_update_query = f"""UPDATE printers set {column_name} = '{_data}' where id = {cell}"""
                 self.cursor.execute(sql_update_query)
+
                 self.connection.commit()
             self.connection.close()
         except Exception as e:
             print(e)
 
-    def add_printer(self, model, cartridge_model, drum_cartridge, ip_address, mac, location):
+    def add_printer(self, model, cartridge_model, drum_cartridge, ip_address, mac, location, building):
         """
         Метод добавления принтера в базу данных
         :param mac:
@@ -41,13 +42,14 @@ class Printer:
         :param drum_cartridge:
         :param ip_address:
         :param location:
+        :param building:
         :return:
         """
         try:
             self.cursor.execute(
-                "INSERT INTO printers (model, cartridge_model,drum_cartridge, ip_address, mac, location) VALUES (?, ?, ?, "
-                "?, ?, ?)",
-                (model, cartridge_model, drum_cartridge, ip_address, mac, location))
+                "INSERT INTO printers (model, cartridge_model,drum_cartridge, ip_address, mac, location, building) VALUES (?, ?, ?, "
+                "?, ?, ?, ?)",
+                (model, cartridge_model, drum_cartridge, ip_address, mac, location, building))
             self.connection.commit()
             self.connection.close()
             print("Принтер успешно добавлен")
