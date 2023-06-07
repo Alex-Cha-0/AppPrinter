@@ -1,22 +1,25 @@
-import sqlite3
+import pymssql as mc
+from cfg import *
 
-
-#
-# conn = sqlite3.connect('printers.db')
-# cursor = conn.cursor()
 
 class PrinterAbortAdd(Exception):
     def __str__(self):
         return f"Ошибка добавления принтера"
 
 
+class PrinterAbortSearch(PrinterAbortAdd):
+    def __str__(self):
+        return f"Ошибка поиска принтера"
+
+
 class Printer:
-    def __init__(self, db_name):
+    def __init__(self):
         """
         Название базы данных
         :param db_name:
         """
-        self.connection = sqlite3.connect(db_name)
+        self.connection = mc.connect(server=SERVERMSSQL, user=USERMSSQL, password=PASSWORDMSSQL,
+                                     database=DATABASEMSSQL)
         self.cursor = self.connection.cursor()
 
     def edit_printers_column(self, data):
@@ -25,7 +28,7 @@ class Printer:
                 column_name = data[i][0]
                 _data = data[i][1]
                 cell = data[i][2]
-                sql_update_query = f"""UPDATE printers set {column_name} = '{_data}' where id = {cell}"""
+                sql_update_query = f"""UPDATE ap_printers set {column_name} = '{_data}' where id = {cell}"""
                 self.cursor.execute(sql_update_query)
 
                 self.connection.commit()
@@ -47,8 +50,7 @@ class Printer:
         """
         try:
             self.cursor.execute(
-                "INSERT INTO printers (model, cartridge_model,drum_cartridge, ip_address, mac, location, building) VALUES (?, ?, ?, "
-                "?, ?, ?, ?)",
+                "INSERT INTO ap_printers (model, cartridge_model,drum_cartridge, ip_address, mac, location, building) VALUES (%s,%s,%s,%s,%s,%s,%s)",
                 (model, cartridge_model, drum_cartridge, ip_address, mac, location, building))
             self.connection.commit()
             self.connection.close()
@@ -59,19 +61,26 @@ class Printer:
             print(e)
 
     def show_printers(self):
-        self.cursor.execute("SELECT id, model, cartridge_model, drum_cartridge, ip_address, mac, location FROM printers")
+        self.cursor.execute(
+            "SELECT id, model, cartridge_model, drum_cartridge, ip_address, mac, location FROM ap_printers")
         printers = self.cursor.fetchall()
         self.connection.close()
         return printers
 
-    def search_printer(self, model):
-
-        self.cursor.execute("SELECT * FROM printers WHERE model=?", (model,))
-        printer = self.cursor.fetchone()
+    def search_printer(self, column, string):
         try:
-            if printer:
-                return printer
-            else:
-                return "Принтер не найден"
+
+            self.cursor.execute(f"SELECT * FROM ap_printers WHERE {column} LIKE '%{string}%'")
+            printer = self.cursor.fetchall()
+            self.connection.close()
+            return printer
         except Exception as s:
-            print(s)
+            pass
+
+
+    def show_printer_by_building(self, building):
+        self.cursor.execute(f"SELECT id, model, cartridge_model, drum_cartridge, ip_address, mac, location "
+                            f"FROM ap_printers where building = '{building}'")
+        printers = self.cursor.fetchall()
+        self.connection.close()
+        return printers

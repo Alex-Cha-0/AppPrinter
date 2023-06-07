@@ -120,6 +120,7 @@ class Ui_MainWindow(object):
         self.pushButton_refresh.setText(_translate("MainWindow", "обновить"))
         self.pushButton_b1.setText(_translate("MainWindow", "B1"))
         self.pushButton_search.setText(_translate("MainWindow", "Поиск"))
+        self.lineEdit.setPlaceholderText(_translate("MainWindow", "column:text"))
         self.pushButton_save.setText(_translate("MainWindow", "Сохранить"))
         self.pushButton_b2.setText(_translate("MainWindow", "B2"))
         self.pushButton_b3.setText(_translate("MainWindow", "B3"))
