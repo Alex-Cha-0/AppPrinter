@@ -5,6 +5,7 @@ from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QTableWidgetItem, QDialog, QMainWindow, QWidget
 from PyQt6.QtWidgets import QMessageBox
 from PyQt6 import QtGui
+from PyQt6.uic.properties import QtCore
 
 import main_window
 import dialog_window
@@ -51,6 +52,8 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         self.pushButton_b2.clicked.connect(lambda: self.import_data_to_table_by_buldings('B2'))
         self.pushButton_b3.clicked.connect(lambda: self.import_data_to_table_by_buldings('B3'))
         self.pushButton_search.clicked.connect(self.get_search_printer)
+
+        self.lineEdit.returnPressed.connect(self.get_search_printer)
 
     def column_to_contex(self):
         """
