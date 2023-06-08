@@ -1,7 +1,7 @@
+from PyQt6.QtCore import QSettings
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QTableWidgetItem, QDialog
 from PyQt6.QtWidgets import QMessageBox
-
 
 import main_window
 import dialog_window
@@ -34,9 +34,12 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+        self.settings = QSettings('ap_printer', 'Ui_MainWindow')
+
+        # Кол-во колонок в таблице
+        self.count_column = self.tableWidget.horizontalHeader().count()
 
         self.tableWidget.setColumnHidden(0, True)
-        #self.tableWidget.setColumnWidth(7, 45)
         self.import_data_to_table()
         self.column_to_contex()
 
@@ -50,6 +53,33 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         self.pushButton_search.clicked.connect(self.get_search_printer)
 
         self.lineEdit.returnPressed.connect(self.get_search_printer)
+
+    """Сохранение настроек"""
+
+    def closeEvent(self, event):
+        self.save_setting()
+        event.accept()
+
+    def save_setting(self):
+        # self.settings.setValue('window size', self.size())
+        # self.settings.setValue('window position', self.pos())
+        self.settings.setValue('Geometry', self.saveGeometry())
+        self.settings.setValue('WindowState', self.saveState())
+
+        for i in range(self.count_column):
+            self.settings.setValue(f'column {i}', self.tableWidget.columnWidth(i))
+
+    def load_setting(self):
+        geometry = self.settings.value('Geometry')
+        if geometry:
+            self.restoreGeometry(geometry)
+
+        state = self.settings.value('WindowState')
+        if state:
+            self.restoreState(state)
+
+        for i in range(self.count_column):
+            self.tableWidget.setColumnWidth(i, self.settings.value(f'column {i}', 100))
 
     def column_to_contex(self):
         """
