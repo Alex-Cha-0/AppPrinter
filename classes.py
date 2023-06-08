@@ -54,7 +54,6 @@ class Printer:
                 (model, cartridge_model, drum_cartridge, ip_address, mac, location, building))
             self.connection.commit()
             self.connection.close()
-            print("Принтер успешно добавлен")
         except PrinterAbortAdd as p:
             print(p)
         except Exception as e:
@@ -62,7 +61,7 @@ class Printer:
 
     def show_printers(self):
         self.cursor.execute(
-            "SELECT id, model, cartridge_model, drum_cartridge, ip_address, mac, location FROM ap_printers")
+            "SELECT id, model, cartridge_model, drum_cartridge, ip_address, mac, location, building FROM ap_printers")
         printers = self.cursor.fetchall()
         self.connection.close()
         return printers
@@ -79,7 +78,7 @@ class Printer:
 
 
     def show_printer_by_building(self, building):
-        self.cursor.execute(f"SELECT id, model, cartridge_model, drum_cartridge, ip_address, mac, location "
+        self.cursor.execute(f"SELECT id, model, cartridge_model, drum_cartridge, ip_address, mac, location, building "
                             f"FROM ap_printers where building = '{building}'")
         printers = self.cursor.fetchall()
         self.connection.close()

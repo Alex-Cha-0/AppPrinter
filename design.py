@@ -1,11 +1,7 @@
-import sys
-
-from PyQt6.QtCore import pyqtSignal, QPropertyAnimation, QPoint
 from PyQt6.QtGui import QFont
-from PyQt6.QtWidgets import QTableWidgetItem, QDialog, QMainWindow, QWidget
+from PyQt6.QtWidgets import QTableWidgetItem, QDialog
 from PyQt6.QtWidgets import QMessageBox
-from PyQt6 import QtGui
-from PyQt6.uic.properties import QtCore
+
 
 import main_window
 import dialog_window
@@ -40,7 +36,7 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         self.setupUi(self)
 
         self.tableWidget.setColumnHidden(0, True)
-
+        self.tableWidget.setColumnWidth(7, 13)
         self.import_data_to_table()
         self.column_to_contex()
 
@@ -60,7 +56,7 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         Размер колонок по содержимому
         :return:
         """
-        for i in range(1, 7):
+        for i in range(4, 7):
             self.tableWidget.resizeColumnToContents(i)
 
     def dialog_window(self):
@@ -77,7 +73,7 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         Перезагрузка главного окна
         :return:
         """
-        self.label_app_message.setText('updated')
+        self.label_app_message.setText('Обновлено')
         self.import_data_to_table()
 
     def cell_was_clicked(self):
@@ -88,7 +84,6 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         try:
             current_row = self.tableWidget.currentRow()
             cell_id = self.tableWidget.item(current_row, 0).text()
-            print(cell_id)
             return cell_id
         except Exception as s:
             pass
@@ -114,7 +109,6 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
                 self.tableWidget.insertRow(row)
                 for column, item in enumerate(form):
                     self.tableWidget.setItem(row, column, QTableWidgetItem(str(item)))
-
         except Exception as s:
             pass
 
@@ -156,7 +150,7 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
             self.reload()
 
         except Exception as s:
-            print(s)
+            pass
 
     def import_data_to_table_by_buldings(self, building):
         """
@@ -173,9 +167,10 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
                 self.tableWidget.insertRow(row)
                 for column, item in enumerate(form):
                     self.tableWidget.setItem(row, column, QTableWidgetItem(str(item)))
+            self.label_app_message.setText(f'Выбрано здание {building}')
 
         except Exception as s:
-            print(s)
+            pass
 
     def get_text_from_search(self):
         """
@@ -216,7 +211,7 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
                 self.tableWidget.insertRow(row)
                 for column, item in enumerate(form):
                     self.tableWidget.setItem(row, column, QTableWidgetItem(str(item)))
-            self.label_app_message.setText('Search result')
+            self.label_app_message.setText('Результат поиска')
 
         except Exception as s:
             pass
