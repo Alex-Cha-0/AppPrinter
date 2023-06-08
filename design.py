@@ -4,6 +4,7 @@ from PyQt6.QtCore import pyqtSignal, QPropertyAnimation, QPoint
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QTableWidgetItem, QDialog, QMainWindow, QWidget
 from PyQt6.QtWidgets import QMessageBox
+from PyQt6 import QtGui
 
 import main_window
 import dialog_window
@@ -38,7 +39,10 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         self.setupUi(self)
 
         self.tableWidget.setColumnHidden(0, True)
+
         self.import_data_to_table()
+        self.column_to_contex()
+
         self.pushButton_add.clicked.connect(self.dialog_window)
         self.tableWidget.cellChanged.connect(self.get_data_from_cell_to_change)
         self.pushButton_save.clicked.connect(self.send_cell_data_to_change)
@@ -48,30 +52,57 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         self.pushButton_b3.clicked.connect(lambda: self.import_data_to_table_by_buldings('B3'))
         self.pushButton_search.clicked.connect(self.get_search_printer)
 
+    def column_to_contex(self):
+        """
+        Размер колонок по содержимому
+        :return:
+        """
+        for i in range(1, 7):
+            self.tableWidget.resizeColumnToContents(i)
+
     def dialog_window(self):
+        """
+        Показать диалог
+        :return:
+        """
         dlg = DialogDesign()
         dlg.finished.connect(self.reload)
         dlg.exec()
 
     def reload(self):
-        # здесь вы можете выполнить любой код, который обновляет главное окно
-
+        """
+        Перезагрузка главного окна
+        :return:
+        """
         self.label_app_message.setText('updated')
         self.import_data_to_table()
 
     def cell_was_clicked(self):
-        # Функция - получить ID
+        """
+        Возвращает id ячейки
+        :return:
+        """
         try:
             current_row = self.tableWidget.currentRow()
             cell_id = self.tableWidget.item(current_row, 0).text()
+            print(cell_id)
             return cell_id
         except Exception as s:
             pass
 
     def cur_row_and_cur_col(self):
+        """
+        Возвращает int выбранной строку и
+        колонки
+        :return:
+        """
         return self.tableWidget.currentRow(), self.tableWidget.currentColumn()
 
     def import_data_to_table(self):
+        """
+        Заполняет таблицу данными из базы
+        :return:
+        """
         try:
             s = Printer()
             result = s.show_printers()
@@ -85,6 +116,12 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
             pass
 
     def get_data_from_cell_to_change(self):
+        """
+        Получает ячейки для изменения и
+        добаляет их в глобальную переменную
+        LIST_OF_CELL_CHANGES
+        :return:
+        """
         try:
             global LIST_OF_CELL_CHANGES
             cell_id = self.cell_was_clicked()
@@ -99,12 +136,15 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
             self.tableWidget.item(current_row, current_column).setFont(font)
             LIST_OF_CELL_CHANGES.append((column_name, cell_value, cell_id))
 
-
-
         except Exception as s:
             pass
 
     def send_cell_data_to_change(self):
+        """
+        Получет ячейки из LIST_OF_CELL_CHANGES
+        и отправляет в базу данных
+        :return:
+        """
         try:
             p = Printer()
             p.edit_printers_column(LIST_OF_CELL_CHANGES)
@@ -116,6 +156,11 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
             print(s)
 
     def import_data_to_table_by_buldings(self, building):
+        """
+        Фильтрует ячейки по зданиям
+        :param building:
+        :return:
+        """
         try:
             s = Printer()
             result = s.show_printer_by_building(building)
@@ -130,6 +175,12 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
             print(s)
 
     def get_text_from_search(self):
+        """
+        Получает текст поиска из
+        lineEdit. Возвращает нужную колонку и
+        текст для поиска
+        :return:
+        """
         result = []
 
         def find_colon_index(txt):
@@ -144,6 +195,12 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         return result
 
     def get_search_printer(self):
+        """
+        Получет нужную колонку и текст из
+        get_text_from_search и показывает результат
+        поиска
+        :return:
+        """
         try:
             col = self.get_text_from_search()[0]
             string_ = self.get_text_from_search()[1]
@@ -156,6 +213,7 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
                 self.tableWidget.insertRow(row)
                 for column, item in enumerate(form):
                     self.tableWidget.setItem(row, column, QTableWidgetItem(str(item)))
+            self.label_app_message.setText('Search result')
 
         except Exception as s:
             pass

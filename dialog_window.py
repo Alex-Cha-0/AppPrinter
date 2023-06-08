@@ -78,5 +78,5 @@ class Ui_Dialog(object):
         self.label_3.setText(_translate("Dialog", "Барабан :"))
         self.label_5.setText(_translate("Dialog", "mac :"))
         self.pushButton_send.setText(_translate("Dialog", "Записать"))
-        self.lineEdit_place_building.setPlaceholderText(_translate("Dialog", "B1F3"))
+        self.lineEdit_place_building.setPlaceholderText(_translate("Dialog", "B1"))
         self.label_7.setText(_translate("Dialog", "Здание"))
