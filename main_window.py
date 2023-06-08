@@ -132,4 +132,4 @@ class Ui_MainWindow(object):
         item = self.tableWidget.horizontalHeaderItem(6)
         item.setText(_translate("MainWindow", "location"))
         item = self.tableWidget.horizontalHeaderItem(7)
-        item.setText(_translate("MainWindow", "bldg"))
+        item.setText(_translate("MainWindow", "building"))

@@ -36,7 +36,7 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         self.setupUi(self)
 
         self.tableWidget.setColumnHidden(0, True)
-        self.tableWidget.setColumnWidth(7, 13)
+        #self.tableWidget.setColumnWidth(7, 45)
         self.import_data_to_table()
         self.column_to_contex()
 
