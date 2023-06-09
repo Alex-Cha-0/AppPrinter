@@ -76,10 +76,16 @@ class Printer:
         except Exception as s:
             pass
 
-
     def show_printer_by_building(self, building):
         self.cursor.execute(f"SELECT id, model, cartridge_model, drum_cartridge, ip_address, mac, location, building "
                             f"FROM ap_printers where building = '{building}'")
         printers = self.cursor.fetchall()
         self.connection.close()
         return printers
+
+    # def load_html_content(self, id):
+    #     self.cursor.execute(f"SELECT html_content "
+    #                         f"FROM ap_printers where id = '{id}'")
+    #     html_content = self.cursor.fetchall()
+    #     self.connection.close()
+    #     return html_content

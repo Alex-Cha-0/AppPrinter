@@ -45,6 +45,7 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
 
         self.pushButton_add.clicked.connect(self.dialog_window)
         self.tableWidget.cellChanged.connect(self.get_data_from_cell_to_change)
+
         self.pushButton_save.clicked.connect(self.send_cell_data_to_change)
         self.pushButton_refresh.clicked.connect(self.reload)
         self.pushButton_b1.clicked.connect(lambda: self.import_data_to_table_by_buldings('B1'))
@@ -245,3 +246,10 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
 
         except Exception as s:
             pass
+
+    # def get_html_content(self):
+    #     p = Printer()
+    #     result = p.load_html_content(self.cell_was_clicked())
+    #     self.textBrowser.setHtml(result[0][0])
+
+

@@ -1,4 +1,4 @@
-# Form implementation generated from reading ui file 'MainWindow1.ui'
+# Form implementation generated from reading ui file 'MainWindow2.ui'
 #
 # Created by: PyQt6 UI code generator 6.5.0
 #
@@ -12,7 +12,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(900, 600)
+        MainWindow.resize(893, 600)
         font = QtGui.QFont()
         font.setFamily("Calibri")
         font.setPointSize(10)
@@ -24,52 +24,98 @@ class Ui_MainWindow(object):
         self.label_app_message = QtWidgets.QLabel(parent=self.centralwidget)
         self.label_app_message.setText("")
         self.label_app_message.setObjectName("label_app_message")
-        self.gridLayout.addWidget(self.label_app_message, 0, 0, 1, 7)
-        self.pushButton_refresh = QtWidgets.QPushButton(parent=self.centralwidget)
-        self.pushButton_refresh.setMinimumSize(QtCore.QSize(41, 31))
+        self.gridLayout.addWidget(self.label_app_message, 0, 0, 1, 1)
+        self.verticalLayout = QtWidgets.QVBoxLayout()
+        self.verticalLayout.setObjectName("verticalLayout")
+        self.menu = QtWidgets.QFrame(parent=self.centralwidget)
+        self.menu.setStyleSheet("background-color: rgba(220, 210, 235, 40);\n"
+"border: 2px solid rgba(138, 138, 138, 80);\n"
+"border-radius: 7px;")
+        self.menu.setObjectName("menu")
+        self.horizontalLayout = QtWidgets.QHBoxLayout(self.menu)
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        self.pushButton_refresh = QtWidgets.QPushButton(parent=self.menu)
+        self.pushButton_refresh.setMinimumSize(QtCore.QSize(80, 31))
+        self.pushButton_refresh.setStyleSheet("QPushButton:hover {\n"
+"   \n"
+"    background-color: rgba(42, 127, 127, 40);\n"
+"    color: white\n"
+"}")
         self.pushButton_refresh.setObjectName("pushButton_refresh")
-        self.gridLayout.addWidget(self.pushButton_refresh, 1, 0, 1, 1)
-        self.pushButton_add = QtWidgets.QPushButton(parent=self.centralwidget)
-        self.pushButton_add.setMinimumSize(QtCore.QSize(50, 31))
+        self.horizontalLayout.addWidget(self.pushButton_refresh)
+        self.pushButton_add = QtWidgets.QPushButton(parent=self.menu)
+        self.pushButton_add.setMinimumSize(QtCore.QSize(80, 31))
+        self.pushButton_add.setStyleSheet("QPushButton:hover {\n"
+"   \n"
+"    background-color: rgba(42, 127, 127, 40);\n"
+"    color: white\n"
+"}")
         self.pushButton_add.setObjectName("pushButton_add")
-        self.gridLayout.addWidget(self.pushButton_add, 1, 1, 1, 1)
-        self.pushButton_search = QtWidgets.QPushButton(parent=self.centralwidget)
-        self.pushButton_search.setMinimumSize(QtCore.QSize(40, 31))
+        self.horizontalLayout.addWidget(self.pushButton_add)
+        self.pushButton_search = QtWidgets.QPushButton(parent=self.menu)
+        self.pushButton_search.setMinimumSize(QtCore.QSize(80, 31))
         font = QtGui.QFont()
         font.setFamily("Calibri")
         font.setPointSize(10)
         self.pushButton_search.setFont(font)
+        self.pushButton_search.setStyleSheet("QPushButton:hover {\n"
+"   \n"
+"    background-color: rgba(42, 127, 127, 40);\n"
+"    color: white\n"
+"}")
         self.pushButton_search.setObjectName("pushButton_search")
-        self.gridLayout.addWidget(self.pushButton_search, 1, 2, 1, 1)
-        self.lineEdit = QtWidgets.QLineEdit(parent=self.centralwidget)
-        self.lineEdit.setMinimumSize(QtCore.QSize(221, 31))
+        self.horizontalLayout.addWidget(self.pushButton_search)
+        self.lineEdit = QtWidgets.QLineEdit(parent=self.menu)
+        self.lineEdit.setMinimumSize(QtCore.QSize(50, 31))
         self.lineEdit.setObjectName("lineEdit")
-        self.gridLayout.addWidget(self.lineEdit, 1, 3, 1, 3)
-        self.pushButton_save = QtWidgets.QPushButton(parent=self.centralwidget)
-        self.pushButton_save.setMinimumSize(QtCore.QSize(111, 31))
-        self.pushButton_save.setObjectName("pushButton_save")
-        self.gridLayout.addWidget(self.pushButton_save, 1, 6, 1, 1)
-        self.label = QtWidgets.QLabel(parent=self.centralwidget)
+        self.horizontalLayout.addWidget(self.lineEdit)
+        self.label = QtWidgets.QLabel(parent=self.menu)
         self.label.setObjectName("label")
-        self.gridLayout.addWidget(self.label, 2, 3, 1, 1)
-        self.pushButton_b1 = QtWidgets.QPushButton(parent=self.centralwidget)
-        self.pushButton_b1.setMinimumSize(QtCore.QSize(20, 10))
+        self.horizontalLayout.addWidget(self.label)
+        self.pushButton_b1 = QtWidgets.QPushButton(parent=self.menu)
+        self.pushButton_b1.setMinimumSize(QtCore.QSize(35, 30))
+        self.pushButton_b1.setStyleSheet("QPushButton:hover {\n"
+"   \n"
+"    background-color: rgba(42, 127, 127, 40);\n"
+"    color: white\n"
+"}")
         self.pushButton_b1.setObjectName("pushButton_b1")
-        self.gridLayout.addWidget(self.pushButton_b1, 2, 4, 1, 1)
-        self.pushButton_b2 = QtWidgets.QPushButton(parent=self.centralwidget)
-        self.pushButton_b2.setMinimumSize(QtCore.QSize(20, 10))
+        self.horizontalLayout.addWidget(self.pushButton_b1)
+        self.pushButton_b2 = QtWidgets.QPushButton(parent=self.menu)
+        self.pushButton_b2.setMinimumSize(QtCore.QSize(35, 30))
+        self.pushButton_b2.setStyleSheet("QPushButton:hover {\n"
+"   \n"
+"    background-color: rgba(42, 127, 127, 40);\n"
+"    color: white\n"
+"}")
         self.pushButton_b2.setObjectName("pushButton_b2")
-        self.gridLayout.addWidget(self.pushButton_b2, 2, 5, 1, 1)
-        self.pushButton_b3 = QtWidgets.QPushButton(parent=self.centralwidget)
-        self.pushButton_b3.setMinimumSize(QtCore.QSize(20, 10))
+        self.horizontalLayout.addWidget(self.pushButton_b2)
+        self.pushButton_b3 = QtWidgets.QPushButton(parent=self.menu)
+        self.pushButton_b3.setMinimumSize(QtCore.QSize(35, 30))
+        self.pushButton_b3.setStyleSheet("QPushButton:hover {\n"
+"   \n"
+"    background-color: rgba(42, 127, 127, 40);\n"
+"    color: white\n"
+"}")
         self.pushButton_b3.setObjectName("pushButton_b3")
-        self.gridLayout.addWidget(self.pushButton_b3, 2, 6, 1, 1)
+        self.horizontalLayout.addWidget(self.pushButton_b3)
+        self.pushButton_save = QtWidgets.QPushButton(parent=self.menu)
+        self.pushButton_save.setMinimumSize(QtCore.QSize(111, 31))
+        self.pushButton_save.setStyleSheet("QPushButton:hover {\n"
+"   \n"
+"    background-color: rgba(42, 127, 127, 40);\n"
+"    color: white\n"
+"}")
+        self.pushButton_save.setObjectName("pushButton_save")
+        self.horizontalLayout.addWidget(self.pushButton_save)
+        self.verticalLayout.addWidget(self.menu)
         self.tableWidget = QtWidgets.QTableWidget(parent=self.centralwidget)
-        self.tableWidget.setStyleSheet("background-color: rgb(254, 255, 245);")
+        self.tableWidget.setStyleSheet("background-color: rgba(220, 210, 235, 20);\n"
+"gridline-color: rgb(255, 255, 255);\n"
+"border:1px solid rgba(138, 138, 138, 40);\n"
+"border-radius: 3px;")
         self.tableWidget.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.AnyKeyPressed|QtWidgets.QAbstractItemView.EditTrigger.DoubleClicked|QtWidgets.QAbstractItemView.EditTrigger.EditKeyPressed|QtWidgets.QAbstractItemView.EditTrigger.SelectedClicked)
         self.tableWidget.setDragEnabled(True)
-        self.tableWidget.setGridStyle(QtCore.Qt.PenStyle.SolidLine)
-        self.tableWidget.setWordWrap(True)
         self.tableWidget.setRowCount(0)
         self.tableWidget.setObjectName("tableWidget")
         self.tableWidget.setColumnCount(8)
@@ -95,7 +141,8 @@ class Ui_MainWindow(object):
         self.tableWidget.horizontalHeader().setStretchLastSection(False)
         self.tableWidget.verticalHeader().setCascadingSectionResizes(False)
         self.tableWidget.verticalHeader().setStretchLastSection(False)
-        self.gridLayout.addWidget(self.tableWidget, 3, 0, 1, 7)
+        self.verticalLayout.addWidget(self.tableWidget)
+        self.gridLayout.addLayout(self.verticalLayout, 1, 0, 1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(parent=MainWindow)
         self.statusbar.setObjectName("statusbar")
@@ -108,14 +155,14 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.pushButton_refresh.setText(_translate("MainWindow", "обновить"))
-        self.pushButton_add.setText(_translate("MainWindow", "Добавить запись"))
+        self.pushButton_add.setText(_translate("MainWindow", "добавить"))
         self.pushButton_search.setText(_translate("MainWindow", "Поиск"))
         self.lineEdit.setPlaceholderText(_translate("MainWindow", "column:text"))
-        self.pushButton_save.setText(_translate("MainWindow", "Сохранить"))
         self.label.setText(_translate("MainWindow", "Фильтровать по зданию :"))
         self.pushButton_b1.setText(_translate("MainWindow", "B1"))
         self.pushButton_b2.setText(_translate("MainWindow", "B2"))
         self.pushButton_b3.setText(_translate("MainWindow", "B3"))
+        self.pushButton_save.setText(_translate("MainWindow", "Сохранить"))
         self.tableWidget.setSortingEnabled(True)
         item = self.tableWidget.horizontalHeaderItem(0)
         item.setText(_translate("MainWindow", "id"))
