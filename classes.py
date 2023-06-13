@@ -1,5 +1,14 @@
 import pymssql as mc
-from cfg import *
+
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+SERVERMSSQL = os.getenv("SERVERMSSQL")
+USERMSSQL = os.getenv("USERMSSQL")
+PASSWORDMSSQL = os.getenv("PASSWORDMSSQL")
+DATABASEMSSQL = os.getenv("DATABASEMSSQL")
 
 
 class PrinterAbortAdd(Exception):
