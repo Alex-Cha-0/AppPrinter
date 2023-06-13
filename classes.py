@@ -2,7 +2,7 @@ import pymssql as mc
 
 from dotenv import load_dotenv
 import os
-
+# загрузка настроек
 load_dotenv()
 
 SERVERMSSQL = os.getenv("SERVERMSSQL")
