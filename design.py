@@ -52,9 +52,9 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         self.pushButton_b2.clicked.connect(lambda: self.import_data_to_table_by_buldings('B2'))
         self.pushButton_b3.clicked.connect(lambda: self.import_data_to_table_by_buldings('B3'))
         self.pushButton_search.clicked.connect(self.get_search_printer)
-
         self.lineEdit.returnPressed.connect(self.get_search_printer)
 
+        self.comboBox.activated.connect(self.set_line_edit_column_to_search)
     """Сохранение настроек"""
 
     def closeEvent(self, event):
@@ -252,4 +252,10 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
     #     result = p.load_html_content(self.cell_was_clicked())
     #     self.textBrowser.setHtml(result[0][0])
 
+    def get_column_name(self):
+        for x in range(1, self.tableWidget.columnCount()):
+            self.comboBox.addItem(self.tableWidget.horizontalHeaderItem(x).text())
+
+    def set_line_edit_column_to_search(self):
+        self.lineEdit.setText(self.comboBox.currentText() + ':')
 
