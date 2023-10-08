@@ -135,11 +135,13 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         try:
             s = Printer()
             result = s.show_printers()
+            self.tableWidget.setSortingEnabled(False)
             self.tableWidget.setRowCount(0)
             for row, form in enumerate(result):
                 self.tableWidget.insertRow(row)
                 for column, item in enumerate(form):
                     self.tableWidget.setItem(row, column, QTableWidgetItem(str(item)))
+            self.tableWidget.setSortingEnabled(True)
         except Exception as s:
             pass
 

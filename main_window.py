@@ -242,7 +242,7 @@ class Ui_MainWindow(object):
         self.pushButton_b2.setText(_translate("MainWindow", "B2"))
         self.pushButton_b3.setText(_translate("MainWindow", "B3"))
         self.pushButton_save.setText(_translate("MainWindow", "Сохранить"))
-        self.tableWidget.setSortingEnabled(True)
+        # self.tableWidget.setSortingEnabled(True)
         item = self.tableWidget.horizontalHeaderItem(0)
         item.setText(_translate("MainWindow", "id"))
         item = self.tableWidget.horizontalHeaderItem(1)
