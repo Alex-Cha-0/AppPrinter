@@ -140,6 +140,8 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
             for row, form in enumerate(result):
                 self.tableWidget.insertRow(row)
                 for column, item in enumerate(form):
+                    if column == 5:
+                        item = str(item).upper()
                     self.tableWidget.setItem(row, column, QTableWidgetItem(str(item)))
             self.tableWidget.setSortingEnabled(True)
         except Exception as s:

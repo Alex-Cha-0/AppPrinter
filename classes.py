@@ -60,7 +60,7 @@ class Printer:
         try:
             self.cursor.execute(
                 "INSERT INTO ap_printers (model, cartridge_model,drum_cartridge, ip_address, mac, location, building) VALUES (%s,%s,%s,%s,%s,%s,%s)",
-                (model, cartridge_model, drum_cartridge, ip_address, mac, location, building))
+                (model, cartridge_model, drum_cartridge, ip_address, mac.upper(), location, building))
             self.connection.commit()
             self.connection.close()
         except PrinterAbortAdd as p:
