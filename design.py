@@ -196,10 +196,12 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
             result = s.show_printer_by_building(building)
 
             self.tableWidget.setRowCount(0)
+            self.tableWidget.setSortingEnabled(False)
             for row, form in enumerate(result):
                 self.tableWidget.insertRow(row)
                 for column, item in enumerate(form):
                     self.tableWidget.setItem(row, column, QTableWidgetItem(str(item)))
+            self.tableWidget.setSortingEnabled(True)
             self.label_app_message.setText(f'Выбрано здание {building}')
 
         except Exception as s:
