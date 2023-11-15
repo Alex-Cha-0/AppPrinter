@@ -2,6 +2,7 @@ import pymssql as mc
 
 from dotenv import load_dotenv
 import os
+
 # загрузка настроек
 load_dotenv()
 
@@ -70,7 +71,7 @@ class Printer:
 
     def show_printers(self):
         self.cursor.execute(
-            "SELECT id, model, cartridge_model, drum_cartridge, ip_address, mac, location, building FROM ap_printers")
+            "SELECT id, model, cartridge_model, drum_cartridge, ip_address, network_id, mac, location, building FROM ap_printers")
         printers = self.cursor.fetchall()
         self.connection.close()
         return printers
@@ -78,7 +79,8 @@ class Printer:
     def search_printer(self, column, string):
         try:
 
-            self.cursor.execute(f"SELECT * FROM ap_printers WHERE {column} LIKE '%{string}%'")
+            self.cursor.execute(
+                f"SELECT id, model, cartridge_model, drum_cartridge, ip_address, network_id, mac, location, building FROM ap_printers WHERE {column} LIKE '%{string}%'")
             printer = self.cursor.fetchall()
             self.connection.close()
             return printer
@@ -86,15 +88,23 @@ class Printer:
             pass
 
     def show_printer_by_building(self, building):
-        self.cursor.execute(f"SELECT id, model, cartridge_model, drum_cartridge, ip_address, mac, location, building "
-                            f"FROM ap_printers where building = '{building}'")
+        self.cursor.execute(
+            f"SELECT id, model, cartridge_model, drum_cartridge, ip_address, network_id, mac, location, building "
+            f"FROM ap_printers where building = '{building}'")
         printers = self.cursor.fetchall()
         self.connection.close()
         return printers
 
-    # def load_html_content(self, id):
-    #     self.cursor.execute(f"SELECT html_content "
-    #                         f"FROM ap_printers where id = '{id}'")
-    #     html_content = self.cursor.fetchall()
-    #     self.connection.close()
-    #     return html_content
+    def show_info(self, id):
+        self.cursor.execute(
+            f"SELECT date_repair, pages_printed, comment  FROM ap_printers_info where printer_id = {id}")
+        printer_info = self.cursor.fetchall()
+        self.connection.close()
+        return printer_info
+
+    def add_info(self, date_repair, pages_printed, comment, printer_id):
+        self.cursor.execute(
+            "INSERT INTO ap_printers_info (date_repair, pages_printed,comment, printer_id) VALUES (%s,%s,%s,%s)",
+            (date_repair, pages_printed, comment, printer_id))
+        self.connection.commit()
+        self.connection.close()

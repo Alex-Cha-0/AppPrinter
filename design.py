@@ -1,8 +1,11 @@
+from datetime import datetime
+
 from PyQt6.QtCore import QSettings
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QTableWidgetItem, QDialog
 from PyQt6.QtWidgets import QMessageBox
 
+import dialog_send_repair
 import main_window
 import dialog_window
 from PyQt6 import QtWidgets
@@ -30,6 +33,26 @@ class DialogDesign(QDialog, dialog_window.Ui_Dialog):
             pass
 
 
+class DialogSendRepair(QDialog, dialog_send_repair.Ui_Dialog_Add_Repair):
+    def __init__(self):
+        super().__init__()
+        self.setupUi(self)
+        self.pushButton_sendrepair.clicked.connect(self.send_data_repair)
+        self.label_printer_id.setVisible(False)
+        self.lineEdit_printer_id.setVisible(False)
+
+
+    def send_data_repair(self):
+        try:
+            p = Printer()
+            p.add_info(datetime.now(), int(self.lineEdit_count_pages.text()), self.textEdit_comment.toPlainText(),
+                   int(self.lineEdit_printer_id.text()))
+
+            self.close()
+        except Exception as s:
+            print(s)
+
+
 class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
     def __init__(self):
         super().__init__()
@@ -44,7 +67,9 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         self.column_to_contex()
 
         self.pushButton_add.clicked.connect(self.dialog_window)
+        self.pushButton_addrepair.clicked.connect(self.dialog_send_repair)
         self.tableWidget.cellChanged.connect(self.get_data_from_cell_to_change)
+        self.tableWidget.clicked.connect(self.true_history_repair)
 
         self.pushButton_save.clicked.connect(self.send_cell_data_to_change)
         self.pushButton_refresh.clicked.connect(self.reload)
@@ -52,9 +77,11 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         self.pushButton_b2.clicked.connect(lambda: self.import_data_to_table_by_buldings('B2'))
         self.pushButton_b3.clicked.connect(lambda: self.import_data_to_table_by_buldings('B3'))
         self.pushButton_search.clicked.connect(self.get_search_printer)
+        self.pushButton_history.clicked.connect(self.show_info)
         self.lineEdit.returnPressed.connect(self.get_search_printer)
 
         self.comboBox.activated.connect(self.set_line_edit_column_to_search)
+
     """Сохранение настроек"""
 
     def closeEvent(self, event):
@@ -99,6 +126,16 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         dlg.finished.connect(self.reload)
         dlg.exec()
 
+    def dialog_send_repair(self):
+        """
+        Показать диалог
+        :return:
+        """
+        dlg = DialogSendRepair()
+        dlg.lineEdit_printer_id.setText(self.cell_was_clicked())
+        dlg.finished.connect(self.reload)
+        dlg.exec()
+
     def reload(self):
         """
         Перезагрузка главного окна
@@ -107,14 +144,32 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         self.label_app_message.setText('Обновлено')
         self.import_data_to_table()
 
+    def import_data(self, result):
+        """
+        Загрузка данных из базы
+        :param result:
+        :return:
+        """
+        self.tableWidget.setSortingEnabled(False)
+        self.tableWidget.setRowCount(0)
+        for row, form in enumerate(result):
+            self.tableWidget.insertRow(row)
+            for column, item in enumerate(form):
+                # Items in colum 5 to upper
+                if column == 6:
+                    item = str(item).upper()
+                self.tableWidget.setItem(row, column, QTableWidgetItem(str(item)))
+        self.tableWidget.setSortingEnabled(True)
+
     def cell_was_clicked(self):
         """
-        Возвращает id ячейки
+        Возвращает id стобца ID
         :return:
         """
         try:
             current_row = self.tableWidget.currentRow()
             cell_id = self.tableWidget.item(current_row, 0).text()
+            print(cell_id)
             return cell_id
         except Exception as s:
             pass
@@ -135,15 +190,7 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         try:
             s = Printer()
             result = s.show_printers()
-            self.tableWidget.setSortingEnabled(False)
-            self.tableWidget.setRowCount(0)
-            for row, form in enumerate(result):
-                self.tableWidget.insertRow(row)
-                for column, item in enumerate(form):
-                    if column == 5:
-                        item = str(item).upper()
-                    self.tableWidget.setItem(row, column, QTableWidgetItem(str(item)))
-            self.tableWidget.setSortingEnabled(True)
+            self.import_data(result)
         except Exception as s:
             pass
 
@@ -197,13 +244,7 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
             s = Printer()
             result = s.show_printer_by_building(building)
 
-            self.tableWidget.setRowCount(0)
-            self.tableWidget.setSortingEnabled(False)
-            for row, form in enumerate(result):
-                self.tableWidget.insertRow(row)
-                for column, item in enumerate(form):
-                    self.tableWidget.setItem(row, column, QTableWidgetItem(str(item)))
-            self.tableWidget.setSortingEnabled(True)
+            self.import_data(result)
             self.label_app_message.setText(f'Выбрано здание {building}')
 
         except Exception as s:
@@ -243,11 +284,7 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
             p = Printer()
             result = p.search_printer(col, string_)
 
-            self.tableWidget.setRowCount(0)
-            for row, form in enumerate(result):
-                self.tableWidget.insertRow(row)
-                for column, item in enumerate(form):
-                    self.tableWidget.setItem(row, column, QTableWidgetItem(str(item)))
+            self.import_data(result)
             self.label_app_message.setText('Результат поиска')
 
         except Exception as s:
@@ -265,3 +302,41 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
     def set_line_edit_column_to_search(self):
         self.lineEdit.setText(self.comboBox.currentText() + ':')
 
+    def show_info(self):
+        id = self.cell_was_clicked()
+        p = Printer()
+        current_row = self.tableWidget.currentRow()
+        model = self.tableWidget.item(current_row, 1).text()
+        location = self.tableWidget.item(current_row, 7).text()
+        try:
+            result = p.show_info(id)
+            if result:
+                self.tabWidget.setCurrentIndex(1)
+                self.label_infotab.setText(model + ' ' + location)
+
+                self.tableWidget_info.setSortingEnabled(False)
+                self.tableWidget_info.setRowCount(0)
+                for row, form in enumerate(result):
+                    self.tableWidget_info.insertRow(row)
+                    for column, item in enumerate(form):
+                        self.tableWidget_info.setItem(row, column, QTableWidgetItem(str(item)))
+                self.tableWidget_info.setSortingEnabled(True)
+
+        except Exception as e:
+            print(e)
+
+    def true_history_repair(self):
+        id = self.cell_was_clicked()
+        p = Printer()
+        result = p.show_info(id)
+        if result:
+            self.pushButton_history.setVisible(True)
+            self.pushButton_history.setStyleSheet("\n"
+                                                  "QPushButton:hover {\n"
+                                                  "    background-color: rgba(42, 127, 127, 40);\n"
+                                                  "    color: black;\n"
+                                                  "    border-radius:7px;\n"
+                                                  "}\n"
+                                                  "")
+        else:
+            self.pushButton_history.setVisible(False)

@@ -1,4 +1,4 @@
-# Form implementation generated from reading ui file '.\MainWindow3.ui'
+# Form implementation generated from reading ui file 'MainWindow4.ui'
 #
 # Created by: PyQt6 UI code generator 6.5.0
 #
@@ -7,13 +7,12 @@
 
 
 from PyQt6 import QtCore, QtGui, QtWidgets
-from PyQt6.QtGui import QFont
 
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(929, 600)
+        MainWindow.resize(947, 619)
         font = QtGui.QFont()
         font.setFamily("Calibri")
         font.setPointSize(10)
@@ -79,9 +78,17 @@ class Ui_MainWindow(object):
         self.centralwidget.setObjectName("centralwidget")
         self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)
         self.gridLayout.setObjectName("gridLayout")
-        self.verticalLayout = QtWidgets.QVBoxLayout()
+        self.label_app_message = QtWidgets.QLabel(parent=self.centralwidget)
+        self.label_app_message.setText("")
+        self.label_app_message.setObjectName("label_app_message")
+        self.gridLayout.addWidget(self.label_app_message, 0, 0, 1, 1)
+        self.tabWidget = QtWidgets.QTabWidget(parent=self.centralwidget)
+        self.tabWidget.setObjectName("tabWidget")
+        self.main_tab = QtWidgets.QWidget()
+        self.main_tab.setObjectName("main_tab")
+        self.verticalLayout = QtWidgets.QVBoxLayout(self.main_tab)
         self.verticalLayout.setObjectName("verticalLayout")
-        self.menu = QtWidgets.QFrame(parent=self.centralwidget)
+        self.menu = QtWidgets.QFrame(parent=self.main_tab)
         self.menu.setStyleSheet("")
         self.menu.setObjectName("menu")
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.menu)
@@ -184,7 +191,35 @@ class Ui_MainWindow(object):
         self.pushButton_save.setObjectName("pushButton_save")
         self.horizontalLayout.addWidget(self.pushButton_save)
         self.verticalLayout.addWidget(self.menu)
-        self.tableWidget = QtWidgets.QTableWidget(parent=self.centralwidget)
+        self.splitter = QtWidgets.QSplitter(parent=self.main_tab)
+        self.splitter.setOrientation(QtCore.Qt.Orientation.Horizontal)
+        self.splitter.setObjectName("splitter")
+        self.pushButton_addrepair = QtWidgets.QPushButton(parent=self.splitter)
+        self.pushButton_addrepair.setEnabled(True)
+        self.pushButton_addrepair.setMinimumSize(QtCore.QSize(0, 31))
+        self.pushButton_addrepair.setMaximumSize(QtCore.QSize(115, 30))
+        self.pushButton_addrepair.setStyleSheet("QPushButton:hover {\n"
+"    background-color: rgba(42, 127, 127, 40);\n"
+"    color: white;\n"
+"    border-radius:7px;\n"
+"}\n"
+"")
+        self.pushButton_addrepair.setDefault(False)
+        self.pushButton_addrepair.setObjectName("pushButton_addrepair")
+        self.pushButton_history = QtWidgets.QPushButton(parent=self.splitter)
+        self.pushButton_history.setVisible(False)
+        self.pushButton_history.setEnabled(True)
+        self.pushButton_history.setMinimumSize(QtCore.QSize(0, 31))
+        self.pushButton_history.setMaximumSize(QtCore.QSize(115, 30))
+        self.pushButton_history.setStyleSheet("QPushButton:hover {\n"
+"    background-color: rgba(42, 127, 127, 40);\n"
+"    color: white;\n"
+"    border-radius:7px;\n"
+"}\n"
+"")
+        self.pushButton_history.setObjectName("pushButton_history")
+        self.verticalLayout.addWidget(self.splitter)
+        self.tableWidget = QtWidgets.QTableWidget(parent=self.main_tab)
         self.tableWidget.setStyleSheet("background-color: rgba(220, 210, 235, 20);\n"
 "gridline-color: rgb(255, 255, 255);\n"
 "border:1px solid rgba(138, 138, 138, 40);\n"
@@ -193,7 +228,7 @@ class Ui_MainWindow(object):
         self.tableWidget.setDragEnabled(True)
         self.tableWidget.setRowCount(0)
         self.tableWidget.setObjectName("tableWidget")
-        self.tableWidget.setColumnCount(8)
+        self.tableWidget.setColumnCount(9)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget.setHorizontalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem()
@@ -210,6 +245,8 @@ class Ui_MainWindow(object):
         self.tableWidget.setHorizontalHeaderItem(6, item)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget.setHorizontalHeaderItem(7, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget.setHorizontalHeaderItem(8, item)
         self.tableWidget.horizontalHeader().setVisible(True)
         self.tableWidget.horizontalHeader().setCascadingSectionResizes(False)
         self.tableWidget.horizontalHeader().setHighlightSections(False)
@@ -217,22 +254,51 @@ class Ui_MainWindow(object):
         self.tableWidget.verticalHeader().setCascadingSectionResizes(False)
         self.tableWidget.verticalHeader().setStretchLastSection(False)
         self.verticalLayout.addWidget(self.tableWidget)
-        self.gridLayout.addLayout(self.verticalLayout, 1, 0, 1, 1)
-        self.label_app_message = QtWidgets.QLabel(parent=self.centralwidget)
-        self.label_app_message.setText("")
-        self.label_app_message.setObjectName("label_app_message")
-        self.gridLayout.addWidget(self.label_app_message, 0, 0, 1, 1)
+        self.tabWidget.addTab(self.main_tab, "")
+        self.info_tab = QtWidgets.QWidget()
+        self.info_tab.setObjectName("info_tab")
+        self.widget = QtWidgets.QWidget(parent=self.info_tab)
+        self.widget.setGeometry(QtCore.QRect(10, 10, 901, 521))
+        self.widget.setObjectName("widget")
+        self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.widget)
+        self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_2.setObjectName("verticalLayout_2")
+        self.label_infotab = QtWidgets.QLabel(parent=self.widget)
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.label_infotab.setFont(font)
+        self.label_infotab.setStyleSheet("")
+        self.label_infotab.setText("")
+        self.label_infotab.setScaledContents(False)
+        self.label_infotab.setObjectName("label_infotab")
+        self.verticalLayout_2.addWidget(self.label_infotab)
+        self.tableWidget_info = QtWidgets.QTableWidget(parent=self.widget)
+        self.tableWidget_info.setObjectName("tableWidget_info")
+        self.tableWidget_info.setColumnCount(3)
+        self.tableWidget_info.setRowCount(0)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget_info.setHorizontalHeaderItem(0, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget_info.setHorizontalHeaderItem(1, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget_info.setHorizontalHeaderItem(2, item)
+        self.tableWidget_info.horizontalHeader().setStretchLastSection(True)
+        self.tableWidget_info.verticalHeader().setSortIndicatorShown(False)
+        self.verticalLayout_2.addWidget(self.tableWidget_info)
+        self.tabWidget.addTab(self.info_tab, "")
+        self.gridLayout.addWidget(self.tabWidget, 1, 0, 1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(parent=MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
+        self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Printers"))
         self.pushButton_refresh.setText(_translate("MainWindow", "обновить"))
         self.pushButton_add.setText(_translate("MainWindow", "добавить"))
         self.lineEdit.setPlaceholderText(_translate("MainWindow", "column:text"))
@@ -243,7 +309,9 @@ class Ui_MainWindow(object):
         self.pushButton_b2.setText(_translate("MainWindow", "B2"))
         self.pushButton_b3.setText(_translate("MainWindow", "B3"))
         self.pushButton_save.setText(_translate("MainWindow", "Сохранить"))
-        # self.tableWidget.setSortingEnabled(True)
+        self.pushButton_addrepair.setText(_translate("MainWindow", "Добавить ремонт"))
+        self.pushButton_history.setText(_translate("MainWindow", "История ремонтов"))
+        self.tableWidget.setSortingEnabled(True)
         item = self.tableWidget.horizontalHeaderItem(0)
         item.setText(_translate("MainWindow", "id"))
         item = self.tableWidget.horizontalHeaderItem(1)
@@ -255,8 +323,18 @@ class Ui_MainWindow(object):
         item = self.tableWidget.horizontalHeaderItem(4)
         item.setText(_translate("MainWindow", "ip_address"))
         item = self.tableWidget.horizontalHeaderItem(5)
-        item.setText(_translate("MainWindow", "mac"))
+        item.setText(_translate("MainWindow", "network_id"))
         item = self.tableWidget.horizontalHeaderItem(6)
-        item.setText(_translate("MainWindow", "location"))
+        item.setText(_translate("MainWindow", "mac"))
         item = self.tableWidget.horizontalHeaderItem(7)
+        item.setText(_translate("MainWindow", "location"))
+        item = self.tableWidget.horizontalHeaderItem(8)
         item.setText(_translate("MainWindow", "building"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.main_tab), _translate("MainWindow", "Tab 1"))
+        item = self.tableWidget_info.horizontalHeaderItem(0)
+        item.setText(_translate("MainWindow", "date_repair"))
+        item = self.tableWidget_info.horizontalHeaderItem(1)
+        item.setText(_translate("MainWindow", "pages_printed"))
+        item = self.tableWidget_info.horizontalHeaderItem(2)
+        item.setText(_translate("MainWindow", "comment"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.info_tab), _translate("MainWindow", "Tab 2"))
