@@ -108,3 +108,10 @@ class Printer:
             (date_repair, pages_printed, comment, printer_id))
         self.connection.commit()
         self.connection.close()
+
+    def delete_row(self, id):
+        self.cursor.execute(
+            f"DELETE FROM ap_printers WHERE id = {id}"
+        )
+        self.connection.commit()
+        self.connection.close()

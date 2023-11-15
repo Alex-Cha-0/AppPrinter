@@ -41,12 +41,11 @@ class DialogSendRepair(QDialog, dialog_send_repair.Ui_Dialog_Add_Repair):
         self.label_printer_id.setVisible(False)
         self.lineEdit_printer_id.setVisible(False)
 
-
     def send_data_repair(self):
         try:
             p = Printer()
             p.add_info(datetime.now(), int(self.lineEdit_count_pages.text()), self.textEdit_comment.toPlainText(),
-                   int(self.lineEdit_printer_id.text()))
+                       int(self.lineEdit_printer_id.text()))
 
             self.close()
         except Exception as s:
@@ -56,6 +55,7 @@ class DialogSendRepair(QDialog, dialog_send_repair.Ui_Dialog_Add_Repair):
 class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
     def __init__(self):
         super().__init__()
+        self.btn_dell = None
         self.setupUi(self)
         self.settings = QSettings('ap_printer', 'Ui_MainWindow')
 
@@ -67,6 +67,8 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         self.column_to_contex()
 
         self.pushButton_add.clicked.connect(self.dialog_window)
+        self.pushButton_addrepair.setEnabled(False)
+        self.pushButton_history.setVisible(False)
         self.pushButton_addrepair.clicked.connect(self.dialog_send_repair)
         self.tableWidget.cellChanged.connect(self.get_data_from_cell_to_change)
         self.tableWidget.clicked.connect(self.true_history_repair)
@@ -150,15 +152,30 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         :param result:
         :return:
         """
+
         self.tableWidget.setSortingEnabled(False)
         self.tableWidget.setRowCount(0)
         for row, form in enumerate(result):
             self.tableWidget.insertRow(row)
+            # Button delete
+            self.btn_dell = QtWidgets.QPushButton(f"❌")
+            self.btn_dell.setStyleSheet(
+                "QPushButton:hover {\n"
+                "    background-color: rgba(42, 127, 127, 40);\n"
+                "    color: white;\n"
+                "    border-radius:7px;\n"
+                "}\n"
+                "")
+            self.btn_dell.setObjectName(f"pushButton_{form[0]}")
+            self.btn_dell.clicked.connect(self.show_popup)
+            self.tableWidget.setCellWidget(row, 9, self.btn_dell)
+            # End Button delete
             for column, item in enumerate(form):
-                # Items in colum 5 to upper
+                # Items in colum 6 to upper
                 if column == 6:
                     item = str(item).upper()
                 self.tableWidget.setItem(row, column, QTableWidgetItem(str(item)))
+
         self.tableWidget.setSortingEnabled(True)
 
     def cell_was_clicked(self):
@@ -169,7 +186,8 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         try:
             current_row = self.tableWidget.currentRow()
             cell_id = self.tableWidget.item(current_row, 0).text()
-            print(cell_id)
+            self.pushButton_addrepair.setEnabled(True)
+            self.label_app_message.setText(f'entry_id - {cell_id}')
             return cell_id
         except Exception as s:
             pass
@@ -227,6 +245,7 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         try:
             p = Printer()
             p.edit_printers_column(LIST_OF_CELL_CHANGES)
+            self.label_app_message.setText(f"Обновлена ячейка {LIST_OF_CELL_CHANGES}")
             LIST_OF_CELL_CHANGES.clear()
             QMessageBox.about(self, 'Change item', 'Success')
             self.reload()
@@ -340,3 +359,30 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
                                                   "")
         else:
             self.pushButton_history.setVisible(False)
+
+    def show_popup(self):
+        try:
+            id = self.cell_was_clicked()
+            current_row = self.tableWidget.currentRow()
+            model = self.tableWidget.item(current_row, 1).text()
+            # result = p.delete_row(id)
+            msg = QMessageBox(text="Удалить запись?", parent=self)
+            msg.setIcon(QMessageBox.Icon.Question)
+            msg.setStandardButtons(QMessageBox.StandardButton.Ok |
+                                   QMessageBox.StandardButton.Cancel)
+            msg.setInformativeText(f'id({id}) {model}')
+            msg.buttonClicked.connect(self.output)
+            ret = msg.exec()
+        except Exception as s:
+            print(s)
+
+    def output(self, button):
+        try:
+            id = self.cell_was_clicked()
+            p = Printer()
+            if button.text() == 'OK':
+                self.label_app_message.setText(f"Удалена запись с id = {id}")
+                p.delete_row(id)
+                self.reload()
+        except Exception as s:
+            print(s)
