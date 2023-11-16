@@ -245,7 +245,7 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         try:
             p = Printer()
             p.edit_printers_column(LIST_OF_CELL_CHANGES)
-            self.label_app_message.setText(f"Обновлена ячейка {LIST_OF_CELL_CHANGES}")
+            self.label_app_message.setText(f"Обновлена ячейка")
             LIST_OF_CELL_CHANGES.clear()
             QMessageBox.about(self, 'Change item', 'Success')
             self.reload()

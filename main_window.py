@@ -95,6 +95,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.pushButton_refresh = QtWidgets.QPushButton(parent=self.menu)
         self.pushButton_refresh.setMinimumSize(QtCore.QSize(70, 31))
+        self.pushButton_refresh.setMaximumSize(QtCore.QSize(80, 16777215))
         self.pushButton_refresh.setStyleSheet("QPushButton:hover {\n"
 "   \n"
 "    background-color: rgba(42, 127, 127, 40);\n"
@@ -105,6 +106,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout.addWidget(self.pushButton_refresh)
         self.pushButton_add = QtWidgets.QPushButton(parent=self.menu)
         self.pushButton_add.setMinimumSize(QtCore.QSize(70, 31))
+        self.pushButton_add.setMaximumSize(QtCore.QSize(80, 16777215))
         self.pushButton_add.setStyleSheet("QPushButton:hover {\n"
 "   \n"
 "    background-color: rgba(42, 127, 127, 40);\n"
@@ -116,16 +118,21 @@ class Ui_MainWindow(object):
         self.pushButton_add.setObjectName("pushButton_add")
         self.horizontalLayout.addWidget(self.pushButton_add)
         self.frame = QtWidgets.QFrame(parent=self.menu)
-        self.frame.setMinimumSize(QtCore.QSize(300, 0))
-        self.frame.setStyleSheet("border-radius:7px;\n"
+        self.frame.setMinimumSize(QtCore.QSize(385, 0))
+        self.frame.setStyleSheet("border-radius: 7px;\n"
+"\n"
 "")
         self.frame.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
         self.frame.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
         self.frame.setObjectName("frame")
         self.lineEdit = QtWidgets.QLineEdit(parent=self.frame)
-        self.lineEdit.setGeometry(QtCore.QRect(193, 0, 108, 31))
-        self.lineEdit.setMinimumSize(QtCore.QSize(100, 31))
-        self.lineEdit.setMaximumSize(QtCore.QSize(300, 16777215))
+        self.lineEdit.setGeometry(QtCore.QRect(190, 0, 181, 31))
+        self.lineEdit.setMinimumSize(QtCore.QSize(50, 31))
+        self.lineEdit.setMaximumSize(QtCore.QSize(1000, 16777215))
+        self.lineEdit.setStyleSheet("border: 1px solid ;\n"
+"border-color: rgb(170, 170, 170);\n"
+"\n"
+"")
         self.lineEdit.setObjectName("lineEdit")
         self.pushButton_search = QtWidgets.QPushButton(parent=self.frame)
         self.pushButton_search.setGeometry(QtCore.QRect(0, 0, 70, 31))
@@ -140,22 +147,25 @@ class Ui_MainWindow(object):
 "    color: white\n"
 "}")
         self.pushButton_search.setObjectName("pushButton_search")
-        self.label_2 = QtWidgets.QLabel(parent=self.frame)
-        self.label_2.setGeometry(QtCore.QRect(76, 0, 55, 31))
-        self.label_2.setObjectName("label_2")
         self.comboBox = QtWidgets.QComboBox(parent=self.frame)
-        self.comboBox.setGeometry(QtCore.QRect(137, 0, 50, 31))
-        self.comboBox.setMinimumSize(QtCore.QSize(50, 31))
+        self.comboBox.setGeometry(QtCore.QRect(80, 0, 105, 31))
+        self.comboBox.setMinimumSize(QtCore.QSize(105, 31))
         self.comboBox.setFocusPolicy(QtCore.Qt.FocusPolicy.StrongFocus)
-        self.comboBox.setStyleSheet("")
+        self.comboBox.setStyleSheet("border: 1px solid ;\n"
+"border-color: rgb(170, 170, 170);\n"
+"")
         self.comboBox.setCurrentText("")
         self.comboBox.setObjectName("comboBox")
         self.horizontalLayout.addWidget(self.frame)
         self.label = QtWidgets.QLabel(parent=self.menu)
+        self.label.setMaximumSize(QtCore.QSize(48, 16777215))
+        self.label.setLayoutDirection(QtCore.Qt.LayoutDirection.LeftToRight)
+        self.label.setFrameShadow(QtWidgets.QFrame.Shadow.Plain)
         self.label.setObjectName("label")
         self.horizontalLayout.addWidget(self.label)
         self.pushButton_b1 = QtWidgets.QPushButton(parent=self.menu)
         self.pushButton_b1.setMinimumSize(QtCore.QSize(35, 30))
+        self.pushButton_b1.setMaximumSize(QtCore.QSize(50, 16777215))
         self.pushButton_b1.setStyleSheet("QPushButton:hover {\n"
 "   \n"
 "    background-color: rgba(42, 127, 127, 40);\n"
@@ -165,6 +175,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout.addWidget(self.pushButton_b1)
         self.pushButton_b2 = QtWidgets.QPushButton(parent=self.menu)
         self.pushButton_b2.setMinimumSize(QtCore.QSize(35, 30))
+        self.pushButton_b2.setMaximumSize(QtCore.QSize(50, 16777215))
         self.pushButton_b2.setStyleSheet("QPushButton:hover {\n"
 "   \n"
 "    background-color: rgba(42, 127, 127, 40);\n"
@@ -174,6 +185,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout.addWidget(self.pushButton_b2)
         self.pushButton_b3 = QtWidgets.QPushButton(parent=self.menu)
         self.pushButton_b3.setMinimumSize(QtCore.QSize(35, 30))
+        self.pushButton_b3.setMaximumSize(QtCore.QSize(50, 16777215))
         self.pushButton_b3.setStyleSheet("QPushButton:hover {\n"
 "   \n"
 "    background-color: rgba(42, 127, 127, 40);\n"
@@ -183,6 +195,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout.addWidget(self.pushButton_b3)
         self.pushButton_save = QtWidgets.QPushButton(parent=self.menu)
         self.pushButton_save.setMinimumSize(QtCore.QSize(111, 31))
+        self.pushButton_save.setMaximumSize(QtCore.QSize(80, 16777215))
         self.pushButton_save.setStyleSheet("QPushButton:hover {\n"
 "   \n"
 "    background-color: rgba(42, 127, 127, 40);\n"
@@ -304,8 +317,7 @@ class Ui_MainWindow(object):
         self.pushButton_add.setText(_translate("MainWindow", "добавить"))
         self.lineEdit.setPlaceholderText(_translate("MainWindow", "column:text"))
         self.pushButton_search.setText(_translate("MainWindow", "Поиск"))
-        self.label_2.setText(_translate("MainWindow", "Столбец:"))
-        self.label.setText(_translate("MainWindow", "Фильтровать по зданию :"))
+        self.label.setText(_translate("MainWindow", " фильтр"))
         self.pushButton_b1.setText(_translate("MainWindow", "B1"))
         self.pushButton_b2.setText(_translate("MainWindow", "B2"))
         self.pushButton_b3.setText(_translate("MainWindow", "B3"))
