@@ -70,17 +70,19 @@ class Printer:
             print(e)
 
     def show_printers(self):
-        self.cursor.execute(
-            "SELECT id, model, cartridge_model, drum_cartridge, ip_address, network_id, mac, location, building FROM ap_printers")
-        printers = self.cursor.fetchall()
-        self.connection.close()
-        return printers
+        try:
+            with self.connection.cursor() as cursor:
+                cursor.execute(
+                    f"SELECT id, model,printed, repairs, cartridge_model, drum_cartridge, ip_address, network_id, mac, location, building FROM ap_printers")
+                return cursor.fetchall()
+        except Exception as e:
+            print('classes - show_printers', e)
 
     def search_printer(self, column, string):
         try:
 
             self.cursor.execute(
-                f"SELECT id, model, cartridge_model, drum_cartridge, ip_address, network_id, mac, location, building FROM ap_printers WHERE {column} LIKE '%{string}%'")
+                f"SELECT id, model, printed, repairs, cartridge_model, drum_cartridge, ip_address, network_id, mac, location, building FROM ap_printers WHERE {column} LIKE '%{string}%'")
             printer = self.cursor.fetchall()
             self.connection.close()
             return printer
@@ -89,7 +91,7 @@ class Printer:
 
     def show_printer_by_building(self, building):
         self.cursor.execute(
-            f"SELECT id, model, cartridge_model, drum_cartridge, ip_address, network_id, mac, location, building "
+            f"SELECT id, model,printed, repairs, cartridge_model, drum_cartridge, ip_address, network_id, mac, location, building "
             f"FROM ap_printers where building = '{building}'")
         printers = self.cursor.fetchall()
         self.connection.close()
@@ -107,6 +109,13 @@ class Printer:
             "INSERT INTO ap_printers_info (date_repair, pages_printed,comment, printer_id) VALUES (%s,%s,%s,%s)",
             (date_repair, pages_printed, comment, printer_id))
         self.connection.commit()
+        #  Получаем кол-во записей ремонта принтера
+        self.cursor.execute(f"SELECT COUNT(*) FROM ap_printers_info WHERE printer_id = {printer_id}")
+        count_of_repair = self.cursor.fetchall()
+        #  Записываем в основную таблицу полученное число
+        print(count_of_repair[0][0])
+        self.cursor.execute(f"UPDATE ap_printers set repairs = {count_of_repair[0][0]} where id = {printer_id}")
+        self.connection.commit()
         self.connection.close()
 
     def delete_row(self, id):
@@ -115,3 +124,16 @@ class Printer:
         )
         self.connection.commit()
         self.connection.close()
+
+    def add_pages_printed(self, printer_id, p_count):
+        try:
+            if p_count is None:
+                pass
+            else:
+                with self.connection.cursor() as cursor:
+                    cursor.execute(
+                        f"UPDATE ap_printers set printed = {p_count} where id = {printer_id} ")
+                self.connection.commit()
+
+        except Exception as e:
+            print('classes - add_pages_printed', e)
