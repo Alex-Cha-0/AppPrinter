@@ -2,7 +2,7 @@ import asyncio
 import threading
 from datetime import datetime
 
-from PyQt6.QtCore import QSettings, QThread, pyqtSignal, QObject
+from PyQt6.QtCore import QSettings, QThread, pyqtSignal, QObject, Qt
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QTableWidgetItem, QDialog
 from PyQt6.QtWidgets import QMessageBox
@@ -276,7 +276,11 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
                 building) in enumerate(result):
             item_id = QTableWidgetItem(str(id))
             item_model = QTableWidgetItem(model)
-            item_printed = QTableWidgetItem(str(printed))
+            # item_printed = QTableWidgetItem(str(printed))
+
+            item_printed = QTableWidgetItem()
+            item_printed.setData(Qt.ItemDataRole.DisplayRole, printed)
+
             item_repairs = QTableWidgetItem(str(repairs))
             item_cartridge_model = QTableWidgetItem(cartridge_model)
             item_drum_cartridge = QTableWidgetItem(drum_cartridge)
