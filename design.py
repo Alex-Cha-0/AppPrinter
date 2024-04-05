@@ -1,5 +1,5 @@
 import asyncio
-import threading
+
 from datetime import datetime
 
 from PyQt6.QtCore import QSettings, QThread, pyqtSignal, QObject, Qt
@@ -14,28 +14,32 @@ from PyQt6 import QtWidgets
 
 from classes import *
 import v1_count_of_pages
+import rc_icons
 
-LIST_OF_CELL_CHANGES = []
+
 
 
 class Worker(QObject):
     finished = pyqtSignal()
     progress = pyqtSignal(int)
     max_value = 0
+    pages_value = 0
 
     def run(self):
         p = Printer()
         printers = p.show_printers()
         current_value = 0
         self.max_value = len(printers) - 1
+        pg = v1_count_of_pages.PrintPages()
+
         for printer in printers:
             printer_id = printer[0]
             ip = printer[6]
 
             if ip:
-
-                p.add_pages_printed(printer_id, asyncio.run(v1_count_of_pages.run(ip, oids=v1_count_of_pages.oid_s)))
+                p.add_pages_printed(printer_id, asyncio.run(pg.run(ip, oids=v1_count_of_pages.oid_s)))
                 self.progress.emit(current_value)
+                self.pages_value = pg.pages
                 current_value += 1
             else:
                 self.progress.emit(current_value)
@@ -84,6 +88,7 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
     def __init__(self):
         super().__init__()
         # self.t1 = threading.Thread(target=self.get_count_pages)
+        self.LIST_OF_CELL_CHANGES = []
         self.btn_dell = None
         self.setupUi(self)
         self.settings = QSettings('ap_printer', 'Ui_MainWindow')
@@ -95,7 +100,6 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         self.tableWidget.setColumnHidden(0, True)
         self.progressBar.setVisible(False)
         self.progressBar.setValue(0)
-
         self.import_data_to_table()
         # self.column_to_contex()
         self.get_column_name()
@@ -104,7 +108,8 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         self.pushButton_addrepair.setEnabled(False)
         self.pushButton_history.setVisible(False)
         self.pushButton_addrepair.clicked.connect(self.dialog_send_repair)
-        self.tableWidget.cellChanged.connect(self.get_data_from_cell_to_change)
+        # self.tableWidget.cellChanged.connect(self.get_data_from_cell_to_change)
+        self.tableWidget.itemChanged.connect(self.get_data_from_cell_to_change)
         self.tableWidget.clicked.connect(self.true_history_repair)
 
         self.pushButton_save.clicked.connect(self.send_cell_data_to_change)
@@ -118,18 +123,23 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
 
         self.comboBox.activated.connect(self.lineEdit_focus)
 
-
-
         self.pushButton_count.clicked.connect(self.task_get_num_of_printed_page)
 
+    def list_of_cell_true_or_false(self):
+        if self.LIST_OF_CELL_CHANGES:
+            self.pushButton_save.setStyleSheet("background-color: rgb(135, 255, 169)")
+        else:
+            self.pushButton_save.setStyleSheet("background-color: rgb(202, 202, 202)")
 
     def lineEdit_focus(self):
         self.lineEdit.clear()
         self.lineEdit.setFocus()
+
     def task_get_num_of_printed_page(self):
         #  QThread()
         self.thread = QThread()
         self.worker = Worker()
+
         self.worker.moveToThread(self.thread)
 
         self.thread.started.connect(self.worker.run)
@@ -137,6 +147,7 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         self.progressBar.setVisible(True)
         # self.max_value = self.worker.max_value
         # self.progressBar.setMaximum(self.max_value)
+
         self.worker.progress.connect(self.update_progress)
 
         self.worker.finished.connect(self.thread.quit)
@@ -150,36 +161,15 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         self.thread.finished.connect(lambda: self.pushButton_count.setEnabled(True))
 
     def update_progress(self, current_value):
+        self.tableWidget.selectRow(current_value)
         self.max_value = self.worker.max_value
         self.progressBar.setMaximum(self.max_value)
         self.progressBar.setValue(current_value)
-        self.tableWidget.selectRow(current_value)
+
         self.reload()
         if self.progressBar.value() == self.max_value:
             self.progressBar.setVisible(False)
             self.progressBar.reset()
-
-    # def get_count_pages(self):
-    #     p = Printer()
-    #     printers = p.show_printers()
-    #     current_value = 0
-    #     max_value = len(printers) - 1
-    #     self.progressBar.setVisible(True)
-    #     self.progressBar.setRange(current_value, max_value)
-    #     for printer in printers:
-    #         ip = printer[4]
-    #         model = printer[1].split()[0]
-    #         if ip:
-    #             asyncio.run(v1_count_of_pages.run(ip, model))
-    #             self.progressBar.setValue(current_value)
-    #             current_value += 1
-    #         else:
-    #             self.progressBar.setValue(current_value)
-    #             current_value += 1
-    #             pass
-    #         if self.progressBar.value() == max_value:
-    #             self.progressBar.setVisible(False)
-    #             self.progressBar.reset()
 
     """Сохранение настроек"""
 
@@ -242,6 +232,8 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         """
         self.label_app_message.setText('Обновлено')
         self.import_data_to_table()
+        self.LIST_OF_CELL_CHANGES.clear()
+        self.list_of_cell_true_or_false()
 
     def import_data(self, result):
         """
@@ -249,34 +241,13 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         :param result:
         :return:
         """
-
+        
         self.tableWidget.setSortingEnabled(False)
         self.tableWidget.setRowCount(len(result))
-        # for row, form in enumerate(result):
-        #     self.tableWidget.insertRow(row)
-        #     # Button delete
-        #     self.btn_dell = QtWidgets.QPushButton(f"❌")
-        #     self.btn_dell.setStyleSheet(
-        #         "QPushButton:hover {\n"
-        #         "    background-color: rgba(42, 127, 127, 40);\n"
-        #         "    color: white;\n"
-        #         "    border-radius:7px;\n"
-        #         "}\n"
-        #         "")
-        #     self.btn_dell.setObjectName(f"pushButton_{form[0]}")
-        #     self.btn_dell.clicked.connect(self.show_popup)
-        #     self.tableWidget.setCellWidget(row, 9, self.btn_dell)
-        #     # End Button delete
-        #     for column, item in enumerate(form):
-        #         # Items in colum 6 to upper
-        #         if column == 6:
-        #             item = str(item).upper()
-        #         self.tableWidget.setItem(row, column, QTableWidgetItem(str(item)))
         for i, (id, model, printed, repairs, cartridge_model, drum_cartridge, ip_address, network_id, mac, location,
                 building) in enumerate(result):
             item_id = QTableWidgetItem(str(id))
             item_model = QTableWidgetItem(model)
-            # item_printed = QTableWidgetItem(str(printed))
 
             item_printed = QTableWidgetItem()
             item_printed.setData(Qt.ItemDataRole.DisplayRole, printed)
@@ -350,29 +321,31 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         except Exception as s:
             print(s)
 
-    def get_data_from_cell_to_change(self):
+    def get_data_from_cell_to_change(self, item):
         """
         Получает ячейки для изменения и
-        добаляет их в глобальную переменную
+        добаляет их в  переменную
         LIST_OF_CELL_CHANGES
         :return:
         """
         try:
-            global LIST_OF_CELL_CHANGES
+            # global LIST_OF_CELL_CHANGES
+            # cell_id = self.cell_was_clicked()
+            # current_row = self.cur_row_and_cur_col()[0]
+            # current_column = self.cur_row_and_cur_col()[1]
+            # column_name = self.tableWidget.horizontalHeaderItem(current_column).text()
+            # cell_value = self.tableWidget.item(current_row, current_column).text()
             cell_id = self.cell_was_clicked()
-            current_row = self.cur_row_and_cur_col()[0]
-            current_column = self.cur_row_and_cur_col()[1]
-            column_name = self.tableWidget.horizontalHeaderItem(current_column).text()
-
-            cell_value = self.tableWidget.item(current_row, current_column).text()
-
+            cell_value = item.text()
+            column_name = self.tableWidget.horizontalHeaderItem(item.column()).text()
             font = QFont()
             font.setItalic(True)
-            self.tableWidget.item(current_row, current_column).setFont(font)
-            LIST_OF_CELL_CHANGES.append((column_name, cell_value, cell_id))
+            # self.tableWidget.item(current_row, current_column).setFont(font)
+            self.LIST_OF_CELL_CHANGES.append((column_name, cell_value, cell_id))
+            self.list_of_cell_true_or_false()
 
         except Exception as s:
-            pass
+            print('get_data_from_cell_to_change', '- ', s)
 
     def send_cell_data_to_change(self):
         """
@@ -382,9 +355,9 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         """
         try:
             p = Printer()
-            p.edit_printers_column(LIST_OF_CELL_CHANGES)
+            p.edit_printers_column(self.LIST_OF_CELL_CHANGES)
             self.label_app_message.setText(f"Обновлена ячейка")
-            LIST_OF_CELL_CHANGES.clear()
+            self.LIST_OF_CELL_CHANGES.clear()
             QMessageBox.about(self, 'Change item', 'Success')
             self.reload()
 
@@ -403,29 +376,11 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
 
             self.import_data(result)
             self.label_app_message.setText(f'Выбрано здание {building}')
+            self.LIST_OF_CELL_CHANGES.clear()
+            self.list_of_cell_true_or_false()
 
         except Exception as s:
             pass
-
-    # def get_text_from_search(self):
-    #     """
-    #     Получает текст поиска из
-    #     lineEdit. Возвращает нужную колонку и
-    #     текст для поиска
-    #     :return:
-    #     """
-    #     result = []
-    #
-    #     def find_colon_index(txt):
-    #         return txt.find(':')
-    #
-    #     text = self.lineEdit.text()
-    #
-    #     column = text[:find_colon_index(text)]
-    #     result.append(column)
-    #     string_ = text[find_colon_index(text) + 1:]
-    #     result.append(string_)
-    #     return result
 
     def get_search_printer(self):
         """
@@ -445,6 +400,8 @@ class PrinterDesign(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
 
             self.import_data(result)
             self.label_app_message.setText('Результат поиска')
+            self.LIST_OF_CELL_CHANGES.clear()
+            self.list_of_cell_true_or_false()
 
         except Exception as s:
             pass

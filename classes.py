@@ -34,6 +34,7 @@ class Printer:
 
     def edit_printers_column(self, data):
         try:
+            print('class edit_printers_column', data)
             for i in range(len(data)):
                 column_name = data[i][0]
                 _data = data[i][1]
@@ -113,7 +114,6 @@ class Printer:
         self.cursor.execute(f"SELECT COUNT(*) FROM ap_printers_info WHERE printer_id = {printer_id}")
         count_of_repair = self.cursor.fetchall()
         #  Записываем в основную таблицу полученное число
-        print(count_of_repair[0][0])
         self.cursor.execute(f"UPDATE ap_printers set repairs = {count_of_repair[0][0]} where id = {printer_id}")
         self.connection.commit()
         self.connection.close()
